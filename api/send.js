@@ -15,27 +15,25 @@ export default async function handler(req, res) {
     const CHAT_ID = "7271283790";
 
     const text = `
-━━━━━━━━━━━━━━━
 📩 <b>Pesan Baru Masuk</b>
-━━━━━━━━━━━━━━━
+━━━━━━━━━━━━━━━━━━
 
-👤 <b>Nama</b> : ${name?.trim() || "Anonim"}
-💬 <b>Pesan</b> :
+👤 <b>Nama</b>: ${name?.trim() || "Anonim"}
+💬 <b>Pesan</b>:
 ${message}
 
-🕒 <b>Waktu</b> : ${new Date().toLocaleString("id-ID", { timeZone: "Asia/Jakarta"})}
+⏰ <b>Waktu</b>: ${new Date().toLocaleString("id-ID", { timeZone: "Asia/Jakarta"})}
 `;
 
-    const telegramURL = `https://api.telegram.org/bot${TOKEN}/sendMessage`;
-
-    const tgResp = await fetch(telegramURL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        chat_id: CHAT_ID,
-        text,
-      }),
-    });
+await fetch(`https://api.telegram.org/bot${process.env.TELEGRAM_BOT_TOKEN}/sendMessage`, {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({
+    chat_id: process.env.TELEGRAM_CHAT_ID,
+    text,
+    parse_mode: "HTML"   // ✅ ini yang bikin <b> jadi bold
+  }),
+});
 
     const data = await tgResp.json();
 
