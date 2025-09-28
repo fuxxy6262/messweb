@@ -25,16 +25,15 @@ ${message}
 ⏰ <b>Waktu</b>: ${new Date().toLocaleString("id-ID", { timeZone: "Asia/Jakarta"})}
 `;
 
-await fetch(`https://api.telegram.org/bot${process.env.TELEGRAM_BOT_TOKEN}/sendMessage`, {
+const tgResp = await fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage`, {
   method: "POST",
   headers: { "Content-Type": "application/json" },
   body: JSON.stringify({
-    chat_id: process.env.TELEGRAM_CHAT_ID,
+    chat_id: CHAT_ID,
     text,
-    parse_mode: "HTML"   // ✅ ini yang bikin <b> jadi bold
+    parse_mode: "HTML"
   }),
 });
-
     const data = await tgResp.json();
 
     if (!data.ok) {
