@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kirim Pesan Anonim</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Poppins', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+      overflow-x: hidden;
+    }
+
+    /* background animasi partikel */
+    #particles-js {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      top: 0;
+      left: 0;
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+      max-width: 500px;
+      width: 90%;
+      padding: 30px;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(15px);
+      border-radius: 20px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+      text-align: center;
+      color: #fff;
+    }
+
+    .avatar {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      overflow: hidden;
+      margin: 0 auto 15px;
+      border: 4px solid rgba(255,255,255,0.3);
+      transition: transform 0.3s ease;
+    }
+    .avatar:hover { transform: scale(1.05); }
+    .avatar img { width: 100%; height: 100%; object-fit: cover; }
+
+    h1 {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 5px;
+    }
+    p.subtitle {
+      font-size: 14px;
+      color: #ccc;
+      margin-bottom: 25px;
+    }
+
+    label {
+      display: block;
+      text-align: left;
+      margin: 10px 0 5px;
+      font-size: 14px;
+      font-weight: 500;
+      color: #e0e0e0;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 12px 15px;
+      border-radius: 12px;
+      border: none;
+      outline: none;
+      font-size: 14px;
+      margin-bottom: 15px;
+      background: rgba(255,255,255,0.15);
+      color: #fff;
+      transition: all 0.2s ease;
+    }
+    input:focus, textarea:focus {
+      background: rgba(255,255,255,0.25);
+      box-shadow: 0 0 8px rgba(255,255,255,0.4);
+    }
+
+    button {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 12px;
+      background: linear-gradient(90deg, #ff8a00, #e52e71);
+      color: #fff;
+      font-weight: 600;
+      font-size: 15px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+    }
+
+    .status {
+      margin-top: 15px;
+      font-size: 14px;
+    }
+    .success { color: #4ade80; }
+    .error { color: #f87171; }
+  </style>
+</head>
+<body>
+  <div id="particles-js"></div>
+
+  <div class="container">
+    <div class="avatar">
+      <!-- ganti URL gambar -->
+      <img src="https://i.ibb.co.com/VpxVLYP8/1758934691835.jpg/300" alt="Fuxxy">
+    </div>
+    <h1>Fuxxy's</h1>
+    <p class="subtitle">Kirim pesan anonim untuk req fitur atau memberitahu error pada fitur🚀</p>
+
+    <form id="anonForm">
+      <label for="nameInput">Nama (opsional)</label>
+      <input type="text" id="nameInput" placeholder="Isi nama atau biarkan kosong">
+
+      <label for="msgInput">Pesan</label>
+      <textarea id="msgInput" rows="4" placeholder="Tulis pesanmu di sini..." required></textarea>
+
+      <button type="submit">Kirim Pesan</button>
+      <div id="statusBox" class="status"></div>
+    </form>
+  </div>
+
+  <!-- Particles.js -->
+  <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+  <script>
+    particlesJS("particles-js", {
+      particles: {
+        number: { value: 60 },
+        size: { value: 3 },
+        move: { speed: 2 },
+        line_linked: { enable: true, opacity: 0.3 },
+        opacity: { value: 0.5 }
+      }
+    });
+
+    const form = document.getElementById('anonForm');
+    const nameInput = document.getElementById('nameInput');
+    const msgInput = document.getElementById('msgInput');
+    const statusBox = document.getElementById('statusBox');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const name = nameInput.value.trim();
+      const message = msgInput.value.trim();
+      if (!message) {
+        statusBox.textContent = "⚠️ Pesan tidak boleh kosong";
+        statusBox.className = "status error";
+        return;
+      }
+      statusBox.textContent = "⏳ Mengirim...";
+      statusBox.className = "status";
+
+      try {
+        const resp = await fetch('/api/send', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, message })
+        });
+        if (!resp.ok) throw new Error("Gagal mengirim pesan");
+        statusBox.textContent = "✅ Pesan terkirim!";
+        statusBox.className = "status success";
+        form.reset();
+      } catch (err) {
+        statusBox.textContent = "❌ Error: " + err.message;
+        statusBox.className = "status error";
+      }
+    });
+  </script>
+</body>
+</html>
