@@ -15,14 +15,15 @@ export default async function handler(req, res) {
     const CHAT_ID = "7271283790";
 
     const text = `
-📩 *Pesan Baru Masuk!*
+━━━━━━━━━━━━━━━
+📩 <b>Pesan Baru Masuk</b>
+━━━━━━━━━━━━━━━
 
-👤 Nama: ${name?.trim() || "Anonim"}
-💬 Pesan:
+👤 <b>Nama</b> : ${name?.trim() || "Anonim"}
+💬 <b>Pesan</b> :
 ${message}
 
---------------------------
-🕒 ${new Date().toLocaleString("id-ID", { timeZone: "Asia/Jakarta" })}
+🕒 <b>Waktu</b> : ${new Date().toLocaleString("id-ID", { timeZone: "Asia/Jakarta"})}
 `;
 
     const telegramURL = `https://api.telegram.org/bot${TOKEN}/sendMessage`;
